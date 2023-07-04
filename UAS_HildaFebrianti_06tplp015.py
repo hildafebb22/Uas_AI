@@ -1,9 +1,82 @@
-from matplotlib import pyplot as plt
+import matplotlib.pyplot as plt
 
-class BaseFuzzy():
+class BaseFuzzy:
     def __init__(self):
-        self.maximum = 0
         self.minimum = 0
+        self.maximum = 0
+
+    def up(self):
+        pass
+
+    def down(self):
+        pass
+
+
+class Pressure(BaseFuzzy):
+    def __init__(self):
+        super().__init__()
+        self.minimum = 0
+        self.maximum = 10 
+        self.p1 = 5
+        self.p2 = 8
+        self.p3 = 15
+        self.p4 = 20
+        self.p5 = 28
+        self.p6 = 30
+        self.p7 = 37
+        self.p8 = 40
+        self.p9 = 47
+
+    def very_low(self, pressure):
+        if pressure <= self.p1:
+            return 1
+        elif pressure <= self.p3:
+            return (self.p3 - pressure) / (self.p3 - self.p1)
+        else:
+            return 0
+
+    def low(self, pressure):
+        if pressure <= self.p2:
+            return 0
+        elif pressure <= self.p4:
+            return (pressure - self.p2) / (self.p4 - self.p2)
+        else:
+            return 0
+
+    def medium(self, pressure):
+        if pressure <= self.p3 or pressure > self.p7:
+            return 0
+        elif pressure <= self.p5:
+            return (pressure - self.p3) / (self.p5 - self.p3)
+        elif pressure <= self.p6:
+            return 1
+        elif pressure <= self.p7:
+            return (self.p7 - pressure) / (self.p7 - self.p6)
+        else:
+            return 0
+
+    def high(self, pressure):
+        if pressure <= self.p6 or pressure > self.p9:
+            return 0
+        elif pressure <= self.p8:
+            return (pressure - self.p6) / (self.p8 - self.p6)
+        elif pressure <= self.p9:
+            return 1
+        else:
+            return 0
+
+    def very_high(self, pressure):
+        if pressure <= self.p8:
+            return 0
+        elif pressure <= self.p9:
+            return (pressure - self.p8) / (self.p9 - self.p8)
+        else:
+            return 0
+
+class suhu():
+    def __init__(self):
+        self.minimum = 0
+        self.maximum = 0
 
     def up(self, x):
         return (x - self.minimum) / (self.maximum - self.minimum)
@@ -12,188 +85,109 @@ class BaseFuzzy():
         return (self.maximum - x) / (self.maximum - self.minimum)
 
 
-class Temperature(BaseFuzzy):
+class Suhu_Input(suhu):
     def __init__(self):
-        self.minimum = -10
-        self.maximum = 100
-
-    def freeze(self, x):
-        if x >= 0:
-            return 1
-        else:
-            self.minimum = -10
-            self.maximum = 0
-            return self.up(x)
-
-    def cold(self, x):
-        if x <= 0 or x >= 40:
-            return 0
-        elif 0 < x < 20:
-            self.minimum = 0
-            self.maximum = 20
-            return self.down(x)
-        else:
-            self.minimum = 20
-            self.maximum = 40
-            return self.up(x)
-
-    def warm(self, x):
-        if x <= 20 or x >= 60:
-            return 0
-        elif 20 < x < 40:
-            self.minimum = 20
-            self.maximum = 40
-            return self.down(x)
-        else:
-            self.minimum = 40
-            self.maximum = 60
-            return self.up(x)
-
-    def hot(self, x):
-        if x <= 40:
-            return 0
-        else:
-            self.minimum = 40
-            self.maximum = 100
-            return self.down(x)
-
-
-class Pressure(BaseFuzzy):
-    def __init__(self):
+        super().__init__()
         self.minimum = 0
-        self.maximum = 100
+        self.maximum = 50
 
-    def very_low(self, x):
-        if x >= 0:
+    def very_cold(self, temperature):
+        if temperature <= 10:
             return 1
+        elif temperature <= 20:
+            return (20 - temperature) / (20 - 10)
         else:
-            self.minimum = 0
-            self.maximum = 10
-            return self.up(x)
-
-    def low(self, x):
-        if x <= 0 or x >= 40:
             return 0
-        elif 0 < x < 20:
-            self.minimum = 0
-            self.maximum = 20
-            return self.down(x)
-        else:
-            self.minimum = 20
-            self.maximum = 40
-            return self.up(x)
 
-    def high(self, x):
-        if x <= 20 or x >= 60:
+    def cold(self, temperature):
+        if temperature <= 10 or temperature >= 30:
             return 0
-        elif 20 < x < 40:
-            self.minimum = 20
-            self.maximum = 40
-            return self.down(x)
-        else:
-            self.minimum = 40
-            self.maximum = 60
-            return self.up(x)
+        elif temperature <= 20:
+            return (temperature - 10) / (20 - 10)
+        elif temperature < 30:
+            return (30 - temperature) / (30 - 20)
 
-    def very_high(self, x):
-        if x <= 40:
+    def warm(self, temperature):
+        if temperature <= 20 or temperature >= 40:
             return 0
+        elif temperature <= 30:
+            return (temperature - 20) / (30 - 20)
+        elif temperature < 40:
+            return (40 - temperature) / (40 - 30)
+
+    def hot(self, temperature):
+        if temperature <= 30 or temperature >= 50:
+            return 0
+        elif temperature <= 40:
+            return (temperature - 30) / (40 - 30)
+        elif temperature < 50:
+            return (50 - temperature) / (50 - 40)
+
+    def very_hot(self, temperature):
+        if temperature <= 40:
+            return 0
+        elif temperature <= 50:
+            return (temperature - 40) / (50 - 40)
         else:
-            self.minimum = 40
-            self.maximum = 100
-            return self.down(x)
+            return 1
 
-
-class Speed(BaseFuzzy):
+class Speed_Output(BaseFuzzy):
     def __init__(self):
+        super().__init__()
         self.minimum = 0
-        self.maximum = 100
+        self.maximum = 110
 
-    def slow(self, x):
-        if x >= 0 and x <= 40:
+    def slow(self, speed):
+        if speed <= 40:
             return 1
-        elif x > 40 and x < 60:
-            self.minimum = 40
-            self.maximum = 60
-            return self.down(x)
+        elif speed <= 60:
+            return (60 - speed) / (60 - 40)
         else:
             return 0
 
-    def steady(self, x):
-        if x <= 40 or x >= 80:
+    def medium(self, speed):
+        if speed <= 40 or speed >= 100:
             return 0
-        elif 40 < x < 60:
-            self.minimum = 40
-            self.maximum = 60
-            return self.up(x)
-        elif 60 <= x <= 80:
-            self.minimum = 60
-            self.maximum = 80
-            return self.down(x)
+        elif speed <= 60:
+            return (speed - 40) / (60 - 40)
+        elif speed <= 80:
+            return 1
+        elif speed <= 100:
+            return (100 - speed) / (100 - 80)
 
-    def fast(self, x):
-        if x <= 60:
+    def fast(self, speed):
+        if speed <= 80:
             return 0
-        elif x > 60 and x < 100:
-            self.minimum = 60
-            self.maximum = 100
-            return self.up(x)
+        elif speed <= 100:
+            return (speed - 80) / (100 - 80)
         else:
             return 1
 
+    def graph(self, axs, temperature, pressure):
+        x = list(range(self.minimum, self.maximum+1))
+        y_slow = [self.slow(s) for s in x]
+        y_medium = [self.medium(s) for s in x]
+        y_fast = [self.fast(s) for s in x]
 
-def main(temperature_value, pressure_value):
-    speed = Speed()
+        axs.plot(x, y_slow, label='Slow')
+        axs.plot(x, y_medium, label='Medium')
+        axs.plot(x, y_fast, label='Fast')
 
-    speed_value = min(
-        speed.fast(Temperature().freeze(temperature_value)) and Pressure().very_low(pressure_value),
-        speed.fast(Temperature().cold(temperature_value)) and Pressure().very_low(pressure_value),
-        speed.fast(Temperature().warm(temperature_value)) and Pressure().very_low(pressure_value),
-        speed.fast(Temperature().hot(temperature_value)) and Pressure().very_low(pressure_value),
-        speed.fast(Temperature().freeze(temperature_value)) and Pressure().low(pressure_value),
-        speed.steady(Temperature().cold(temperature_value)) and Pressure().low(pressure_value),
-        speed.steady(Temperature().warm(temperature_value)) and Pressure().low(pressure_value),
-        speed.steady(Temperature().hot(temperature_value)) and Pressure().low(pressure_value),
-        speed.steady(Temperature().freeze(temperature_value)) and Pressure().medium(pressure_value),
-        speed.steady(Temperature().cold(temperature_value)) and Pressure().medium(pressure_value),
-        speed.steady(Temperature().warm(temperature_value)) and Pressure().medium(pressure_value),
-        speed.steady(Temperature().hot(temperature_value)) and Pressure().medium(pressure_value),
-        speed.steady(Temperature().freeze(temperature_value)) and Pressure().high(pressure_value),
-        speed.steady(Temperature().cold(temperature_value)) and Pressure().high(pressure_value),
-        speed.steady(Temperature().warm(temperature_value)) and Pressure().high(pressure_value),
-        speed.slow(Temperature().hot(temperature_value)) and Pressure().high(pressure_value),
-        speed.slow(Temperature().freeze(temperature_value)) and Pressure().very_high(pressure_value),
-        speed.slow(Temperature().cold(temperature_value)) and Pressure().very_high(pressure_value),
-        speed.slow(Temperature().warm(temperature_value)) and Pressure().very_high(pressure_value),
-        speed.slow(Temperature().hot(temperature_value)) and Pressure().very_high(pressure_value)
-    )
+        axs.set_xlabel('Speed')
+        axs.set_ylabel('Membership')
+        axs.set_title('Speed Output for Temperature: ' + str(temperature) + ' and Pressure: ' + str(pressure))
+        axs.legend()
+        axs.set_xticks([0, 40, 60, 80, 100])
 
+if __name__ == "__main__":
+    temperature = float(input("Enter the temperature value: "))
+    pressure = float(input("Enter the pressure value: "))
 
-    fig, ax = plt.subplots(figsize=(6, 4))
-    ax.set_title('Speed')
-    ax.set_xlabel('Speed')
-    ax.set_ylabel('Membership')
+    fig, axs = plt.subplots(1, 1, figsize=(5, 5))
 
-    # slow
-    x_slow = [0, 40, 60, 80, 100]
-    y_slow = [1, 1, 0, 0, 0]
-    ax.plot(x_slow, y_slow, label='slow')
+    speed_output = Speed_Output()
 
-    # steady
-    x_steady = [40, 60, 80, 100, 120]
-    y_steady = [0, 1, 1, 0, 0]
-    ax.plot(x_steady, y_steady, label='steady')
+    speed_output.graph(axs, temperature, pressure)
 
-    # fast
-    x_fast = [0, 40, 60, 80, 100, 120]
-    y_fast = [0, 0, 0, 0, 1, 1]
-    ax.plot(x_fast, y_fast, label='fast')
-
-    ax.legend(loc='upper left')
-    ax.set_ylim([-0.1, 1.1])
-    ax.set_xticks([0, 40, 60, 80, 100])
+    plt.tight_layout()
     plt.show()
-
-
-if __name__ == '__main__':
-    main(80, 60)
